@@ -1,0 +1,7 @@
+.navbar>.container-fluid {
+    display: block;
+}
+
+.navbar-nav {
+    flex-direction: row;
+}
