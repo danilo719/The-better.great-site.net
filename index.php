@@ -23,9 +23,11 @@ elseif (isset($_SESSION['ingelogd']))
     {
         $page = $_GET['page'];
         $path = $_GET['path'];
-        $category = $_GET['category'];
     }
     
+    $path = "";
+    $page = "home";
+
 }
 else
 {
@@ -68,7 +70,7 @@ else
 
 <body>
 <?php
-include 'inc/navbar/navbar.php';
+//include 'inc/navbar/navbar.php';
 ?>
 
     <?php
@@ -84,13 +86,25 @@ include 'inc/navbar/navbar.php';
         unset($_SESSION["alert"]["backgroundcolor"]);
         unset($_SESSION["alert"]["color"]);
     }
-
+    
     if($page == "login"){
         include 'pages/'.$path.'/'.$page.'.php';
     }
-    else{?>
+    else
+    {?>
         <div class="container">
-            <?php include 'pages/'.$path.'/'.$page.'.php'; ?>
+            <?php 
+            
+            if($path != "")
+            {
+                include 'pages/'.$path.'/'.$page.'.php';
+            }
+            else
+            {
+                include 'pages/'.$page.'.php';
+            }
+            
+            ?>
         </div>
     <?php
     }
