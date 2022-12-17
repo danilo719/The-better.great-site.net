@@ -8,7 +8,6 @@ include 'inc/class.inc.php';
 if (isset($_GET['page']) && !isset($_SESSION['ingelogd'])) {
     $page = $_GET['page'];
     $path = 'guest';
-    $_SESSION['last_login_timestamp'] = time();
 
 }
 elseif (isset($_SESSION['ingelogd']))
@@ -24,28 +23,9 @@ elseif (isset($_SESSION['ingelogd']))
     {
         $page = $_GET['page'];
         $path = $_GET['path'];
+        $category = $_GET['category'];
     }
-    else
-    {
-        if(isset($_GET['page']))
-        {
-            $page = $_GET['page'];
-            $path = "";
-        }
-        else
-        {
-            header('location: index.php?path=content&page=lijst');
-        }
-    }
-
-    if((time() - $_SESSION['last_login_timestamp']) > 900) // 900 = 15 * 60
-    {
-        header('Location: index.php?page=uitloggen');
-    }
-    else
-    {
-        $_SESSION['last_login_timestamp'] = time();
-    }
+    
 }
 else
 {
@@ -63,7 +43,7 @@ else
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>examen</title>
+    <title>the better great website</title>
     <!-- website icon -->
     <link rel="icon" href="" />
     <!-- jquery script -->
@@ -105,9 +85,6 @@ include 'inc/navbar/navbar.php';
         unset($_SESSION["alert"]["color"]);
     }
 
-    ?>
-
-    <?php
     if($page == "login"){
         include 'pages/'.$path.'/'.$page.'.php';
     }
@@ -117,8 +94,7 @@ include 'inc/navbar/navbar.php';
         </div>
     <?php
     }
-    
     ?>
+    
 </body>
-
 </html>
