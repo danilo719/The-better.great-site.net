@@ -120,5 +120,5 @@ include 'inc/navbar/navbar.php';
     
     ?>
 </body>
-poep
+
 </html>
