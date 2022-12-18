@@ -10,11 +10,11 @@ foreach($menuitemsIDs as $selectedmenuitemID){
   ?>
 
   
-  <div class="card" style="width: 15%; margin-top: 10%; border-width: 0px;">
+  <div class="card" ">
     <a href="index.php?path=<?= $selectedmenuitems["path"] ?>&page=<?= $selectedmenuitems["homepage"] ?>">
-      <?= $selectedmenuitems["icon"] ?>
+    <?= $selectedmenuitems["icon"] ?>
       <div class="card-body">
-      <p class="card-text" style="text-align: center; font-size: 20px"><?= $selectedmenuitems["name"] ?></p>
+      <p class="card-text" style="text-align: center;"><?= $selectedmenuitems["name"] ?></p>
       </div>
     </a>
   </div>   
