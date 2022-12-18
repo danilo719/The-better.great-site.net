@@ -8,7 +8,7 @@ if(isset($_SESSION['ingelogd']))
 <nav class="navbar navbar-inverse">
     <div class="container-fluid">
         <div class="navbar-header">
-            <a class="navbar-brand" href="index.php?"></a>
+            <a class="navbar-brand" href="index.php?">The better great site</a>
         </div>
         <ul class="nav navbar-nav">
             <?php

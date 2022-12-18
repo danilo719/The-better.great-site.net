@@ -5,7 +5,7 @@ $menuitemsIDs = fgetobject("userid_menuitemid", "userID", $_SESSION["userID"]);
 foreach($menuitemsIDs as $selectedmenuitemID){
   
   $menuitems = array();
-  $menuitems = fgetobject("menuitems", "menuitemID", $selectedmenuitemID["menuitemID"], " ORDER BY weight ASC");
+  $menuitems = fgetobject("menuitems", "menuitemID", $selectedmenuitemID["menuitemID"], " ORDER BY weight");
   $selectedmenuitems = $menuitems->fetch(PDO::FETCH_ASSOC);
   ?>
 
