@@ -6,7 +6,7 @@ include 'SQL/connection.php';
 include 'inc/class.inc.php';
 
 if (isset($_GET['page']) && !isset($_SESSION['ingelogd'])) {
-    $page = $_GET['page'];
+    $page = 'login';
     $path = 'guest';
 
 }
@@ -24,9 +24,11 @@ elseif (isset($_SESSION['ingelogd']))
         $page = $_GET['page'];
         $path = $_GET['path'];
     }
-    
-    $path = "";
-    $page = "home";
+    else
+    {
+        $path = "";
+        $page = "home";
+    }
 
 }
 else
@@ -34,6 +36,7 @@ else
     session_destroy();
     session_start();
     header('Location: index.php?path=guest&page=login');
+    die();
 }
 
 ?>
@@ -58,19 +61,19 @@ else
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     <!-- font awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" type="text/css" href="css/style.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="css/main.css" type="text/css">
 
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 </head>
 
 <body>
 <?php
-//include 'inc/navbar/navbar.php';
+    include 'inc/navbar/navbar.php';
 ?>
 
     <?php
@@ -97,6 +100,7 @@ else
             
             if($path != "")
             {
+                
                 include 'pages/'.$path.'/'.$page.'.php';
             }
             else
