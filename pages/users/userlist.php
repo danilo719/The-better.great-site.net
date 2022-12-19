@@ -40,7 +40,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 
             if($_POST['password'] != "")
             {
-                $arrayvalues['password']      = password_hash($_POST['password'],PASSWORD_DEFAULT); //password_verify($plaintext_password, $hash);
+                $arrayvalues['password']      = password_hash($_POST['password'], PASSWORD_DEFAULT); //password_verify($plaintext_password, $hash);
             }
             
             if($_POST['userID'] != "")
@@ -58,7 +58,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
                     die();
                 }
 
-                fupdateobject("users", $arrayvalues, " Where userID = '".$_POST['userID']."'");
+                fupdateobject("users", $arrayvalues, " Where userID = ".$_POST['userID']);
 
                 $_SESSION["alert"]["backgroundcolor"] = "green";
                 $_SESSION["alert"]["color"] = "white";
@@ -92,8 +92,8 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
     die();
 }
 ?>
-<div class="text-center mt-5" style="margin: 10%">
-    <h1>Gebruikers</h1>
+<div class="wrapper bg-white mt-sm-5 mb-5">
+    <h1 class="pb-4 border-bottom">Gebruikerlijst</h1>
 </div>
 
 <table class="table table-striped">
@@ -201,7 +201,6 @@ if($_SESSION['roleID'] == "1")
 
                 $ID = $selected['userID'];
                 $username = $selected['username'];
-                $password = '';
                 $roleID = $selected['roleID'];
                 $enddate = $selected['enddate'];
                 $statusID = $selected['statusID'];

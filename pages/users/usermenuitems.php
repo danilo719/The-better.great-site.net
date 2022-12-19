@@ -36,8 +36,8 @@ $menuitems = fgetobject("menuitems", "statusID", "1", " order by weight");
 
 ?>
 
-<div class="text-center mt-5" style="margin: 10%">
-    <h1>Menu voor <?=$_POST['username'];?> </h1>
+<div class="wrapper bg-white mt-sm-5">
+    <h1 class="pb-4 border-bottom">Menu voor <?=$_POST['username'];?></h1>
 </div>
 
 <form action="index.php?path=users&page=usermenuitems" method="POST">
