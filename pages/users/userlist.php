@@ -21,7 +21,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
             
             foreach ($_POST as $key => $value)
             {
-                if($key != "userID" && $value == "" || $key != "password" && $value == "")
+                if($key != "userID" && $value == "" &&  $key != "password")
                 {
                     $_SESSION["alert"]["backgroundcolor"] = "red";
                     $_SESSION["alert"]["color"] = "white";
