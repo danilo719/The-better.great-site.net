@@ -13,7 +13,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 
               $_SESSION["alert"]["backgroundcolor"] = "red";
               $_SESSION["alert"]["color"] = "white";
-              $_SESSION["alert"]["message"] = "oeps ".$selected['username'].", uw account is verlopen";
+              $_SESSION["alert"]["message"] = "oeps ".$selected['username'].", uw account is verlopen of u heeft geen account.";
               header('Location: index.php?path=guest&page=login');
               die();
             }

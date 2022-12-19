@@ -1,28 +1,29 @@
 <?php
-$menuitemsIDs = array();
-$menuitemsIDs = fgetobject("userid_menuitemid", "userID", $_SESSION["userID"]);
+$menuitems = array();
+$menuitems = fgetobject("menuitems", "statusID", "1", " ORDER BY weight");
 
-foreach($menuitemsIDs as $selectedmenuitemID){
-  
-  $menuitems = array();
-  $menuitems = fgetobject("menuitems", "menuitemID", $selectedmenuitemID["menuitemID"], " ORDER BY weight");
-  $selectedmenuitems = $menuitems->fetch(PDO::FETCH_ASSOC);
-  ?>
+foreach($menuitems as $menuitem){
+  $menuitem_user = fgetobject("userid_menuitemid", "userID", $_SESSION["userID"], " and menuitemID = '".$menuitem["menuitemID"]."'");
+  $selected = $menuitem_user->fetch(PDO::FETCH_ASSOC);
+
+  if($selected["userID"] != ""){
+
+    ?>
 
   
-  <div class="card" ">
-    <a href="index.php?path=<?= $selectedmenuitems["path"] ?>&page=<?= $selectedmenuitems["homepage"] ?>">
-    <?= $selectedmenuitems["icon"] ?>
+  <div class="card">
+    <a href="index.php?path=<?= $menuitem["path"] ?>&page=<?= $menuitem["homepage"] ?>">
+    <?= $menuitem["icon"] ?>
       <div class="card-body">
-      <p class="card-text" style="text-align: center;"><?= $selectedmenuitems["name"] ?></p>
+      <p class="card-text" style="text-align: center;"><?= $menuitem["name"] ?></p>
       </div>
     </a>
   </div>   
 
 
   <?php
+
+  }
+  
+
 }
-?>
-
-
-

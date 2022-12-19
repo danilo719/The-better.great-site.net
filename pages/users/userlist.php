@@ -16,11 +16,12 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
             $_SESSION["alert"]["message"] = "Delete succesvol";
 
         }
-        else
+        elseif($_POST['userID'] != "1")
         {
+            
             foreach ($_POST as $key => $value)
             {
-                if($key != "sport_ID" && $value == "" || $key == "aantalPlaatsen" && $value <= "0")
+                if($key != "userID" && $value == "" || $key != "password" && $value == "")
                 {
                     $_SESSION["alert"]["backgroundcolor"] = "red";
                     $_SESSION["alert"]["color"] = "white";
@@ -32,26 +33,57 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
             }
 
             $arrayvalues = array();
-            $arrayvalues['sportNaam']           = $_POST['sportNaam'];
-            $arrayvalues['aantalPlaatsen']      = $_POST['aantalPlaatsen'];
-            $arrayvalues['status']              = $_POST['Status'];
-            $arrayvalues['gebruikersID']        = $_POST['cordinator'];
+            $arrayvalues['statusID']      = $_POST['statusID'];
+            $arrayvalues['username']      = $_POST['username'];
+            $arrayvalues['roleID']        = $_POST['roleID'];
+            $arrayvalues['enddate']       = $_POST['enddate'];
 
-            if($_POST['sport_ID'] != "")
+            if($_POST['password'] != "")
             {
-                fupdateobject("sporten", $arrayvalues, " Where sport_ID = '".$_POST['sport_ID']."'");
+                $arrayvalues['password']      = password_hash($_POST['password'],PASSWORD_DEFAULT); //password_verify($plaintext_password, $hash);
+            }
+            
+            if($_POST['userID'] != "")
+            {
+                $check = fgetobject("users", "username", $_POST['username'], " and userID != ".$_POST['userID']);
+                $selected = $check->fetch(PDO::FETCH_ASSOC);
+                
+                if($selected)
+                {
+                    $_SESSION["alert"]["backgroundcolor"] = "red";
+                    $_SESSION["alert"]["color"] = "white";
+                    $_SESSION["alert"]["message"] = "Helaas de naam bestaat al.";
+    
+                    header("location: index.php?path=users&page=userlist");
+                    die();
+                }
+
+                fupdateobject("users", $arrayvalues, " Where userID = '".$_POST['userID']."'");
 
                 $_SESSION["alert"]["backgroundcolor"] = "green";
                 $_SESSION["alert"]["color"] = "white";
-                $_SESSION["alert"]["message"] = "De sport is succesvol bijgewerkt";
+                $_SESSION["alert"]["message"] = "De gebruiker is succesvol bijgewerkt";
             }
             else
             {
-                finsertobject("sporten", $arrayvalues);
+                $check = fgetobject("users", "username", $_POST['username']);
+                $selected = $check->fetch(PDO::FETCH_ASSOC);
+                
+                if($selected)
+                {
+                    $_SESSION["alert"]["backgroundcolor"] = "red";
+                    $_SESSION["alert"]["color"] = "white";
+                    $_SESSION["alert"]["message"] = "Helaas de naam bestaat al.";
+    
+                    header("location: index.php?path=users&page=userlist");
+                    die();
+                }
+
+                finsertobject("users", $arrayvalues);
 
                 $_SESSION["alert"]["backgroundcolor"] = "green";
                 $_SESSION["alert"]["color"] = "white";
-                $_SESSION["alert"]["message"] = "De sport is succesvol aangemaakt";
+                $_SESSION["alert"]["message"] = "De gebruiker is succesvol aangemaakt";
             }
         }
     }
@@ -99,14 +131,27 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
                      <input type="hidden" name="button" value="delete">
                      <input type="hidden" name="userID" value="<?=$user['userID'];?>">
                      <button type="submit" <?php if($user["userID"] == "1"){ echo "disabled";} ?> class="btn btn-primary float-right ml-1 mr-1">
-                         Verwijderen
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
+                            <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"/>
+                        </svg>
                      </button>
                  </form>
                  <form action="index.php?path=users&page=userlist" method="POST">
                      <input type="hidden" name="button" value="edit">
                      <input type="hidden" name="userID" value="<?=$user['userID'];?>">
                      <button type="submit" <?php if($user["userID"] == "1"){ echo "disabled";} ?> class="btn btn-primary float-right ml-1 mr-1">
-                         Bewerken
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-fill" viewBox="0 0 16 16">
+                            <path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z"/>
+                        </svg>
+                     </button>
+                 </form>
+                 <form action="index.php?path=users&page=usermenuitems" method="POST">
+                     <input type="hidden" name="username" value="<?=$user['username'];?>">
+                     <input type="hidden" name="userID" value="<?=$user['userID'];?>">
+                     <button type="submit" <?php if($user["userID"] == "1"){ echo "disabled";} ?> class="btn btn-primary float-right ml-1 mr-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-diagram-3-fill" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M6 3.5A1.5 1.5 0 0 1 7.5 2h1A1.5 1.5 0 0 1 10 3.5v1A1.5 1.5 0 0 1 8.5 6v1H14a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-1 0V8h-5v.5a.5.5 0 0 1-1 0V8h-5v.5a.5.5 0 0 1-1 0v-1A.5.5 0 0 1 2 7h5.5V6A1.5 1.5 0 0 1 6 4.5v-1zm-6 8A1.5 1.5 0 0 1 1.5 10h1A1.5 1.5 0 0 1 4 11.5v1A1.5 1.5 0 0 1 2.5 14h-1A1.5 1.5 0 0 1 0 12.5v-1zm6 0A1.5 1.5 0 0 1 7.5 10h1a1.5 1.5 0 0 1 1.5 1.5v1A1.5 1.5 0 0 1 8.5 14h-1A1.5 1.5 0 0 1 6 12.5v-1zm6 0a1.5 1.5 0 0 1 1.5-1.5h1a1.5 1.5 0 0 1 1.5 1.5v1a1.5 1.5 0 0 1-1.5 1.5h-1a1.5 1.5 0 0 1-1.5-1.5v-1z"/>
+                        </svg>
                      </button>
                  </form>
                  <?php
@@ -142,22 +187,24 @@ if($_SESSION['roleID'] == "1")
             <?php
             if ($_SESSION["selected_ID"] >= 0 && $_SESSION["selected_ID"] != "")
             {
-                $selected = fgetobject('sporten', 'sport_ID', $_SESSION["selected_ID"]);
+                $selected = fgetobject('users', 'userID', $_SESSION["selected_ID"]);
                 $selected = $selected->fetch(PDO::FETCH_ASSOC);
 
                 $type = "bijwerken";
 
                 $ID = '';
-                $status = '';
-                $sportNaam = '';
-                $aantalPlaatsen = '';
-                $gebruikersID = '';
+                $username = '';
+                $password = '';
+                $roleID = '';
+                $enddate = '';
+                $statusID = '';
 
-                $ID = $selected['sport_ID'];
-                $status = $selected['status'];
-                $sportNaam = $selected['sportNaam'];
-                $aantalPlaatsen = $selected['aantalPlaatsen'];
-                $gebruikersID = $selected['gebruikersID'];
+                $ID = $selected['userID'];
+                $username = $selected['username'];
+                $password = '';
+                $roleID = $selected['roleID'];
+                $enddate = $selected['enddate'];
+                $statusID = $selected['statusID'];
 
                 echo "<script type='text/javascript'>
                             $(document).ready(function(){
@@ -171,10 +218,11 @@ if($_SESSION['roleID'] == "1")
                 $type = "aanmaken";
 
                 $ID = '';
-                $status = '';
-                $sportNaam = '';
-                $aantalPlaatsen = '';
-                $gebruikersID = '';
+                $username = '';
+                $password = '';
+                $roleID = '';
+                $enddate = '';
+                $statusID = '';
 
                 echo "<script type='text/javascript'>
                             $(document).ready(function(){
@@ -185,74 +233,80 @@ if($_SESSION['roleID'] == "1")
             }
             ?>
             <div class="modal-header">
-                <h2 class="modal-title" id="exampleModalLabel">Sport <?= $type ?></h2>
+                <h2 class="modal-title" id="exampleModalLabel">Gebruiker <?= $type ?></h2>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <form method="post" action="index.php?path=content&page=lijst">
-                    <input type="hidden" name="sport_ID" id="ID" value="<?= $ID ?>"/>
+                <form method="post" action="index.php?path=users&page=userlist">
+                    <input type="hidden" name="userID" id="ID" value="<?= $ID ?>"/>
                     <div class="form-group row">
                         <label class="col-md-4 col-form-label text-md-right">Status</label>
                         <div class="col-md-6">
                             <?php
-                            $open = "";
-                            $gesloten = "";
-                            if($status == 1 || $status == "")
+                            $active = "";
+                            $inactive = "";
+                            if($statusID == 1 || $statusID == "")
                             {
-                                $open = "checked";
+                                $active = "checked";
                             }
-                            elseif($status == 0)
+                            elseif($statusID == 0)
                             {
-                                $gesloten = "checked";
+                                $inactive = "checked";
                             }
                             ?>
                             <div class="form-check">
-                                <input class="form-check-input" <?= $open ?> required type="radio" name="Status" id="Radios1" value="1">
+                                <input class="form-check-input" <?= $active ?> required type="radio" name="statusID" id="Radios1" value="1">
                                 <label class="form-check-label" for="Radios1">
-                                    Open
+                                    Actief
                                 </label>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input" <?= $gesloten ?> required type="radio" name="Status" id="Radios2" value="0">
+                                <input class="form-check-input" <?= $inactive ?> required type="radio" name="statusID" id="Radios2" value="2">
                                 <label class="form-check-label" for="Radios2">
-                                    Gesloten
+                                    Inactief
                                 </label>
                             </div>
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label class="col-md-4 col-form-label text-md-right">Sportnaam</label>
+                        <label class="col-md-4 col-form-label text-md-right">Gebruikersnaam</label>
                         <div class="col-md-6">
-                            <input type="text" id="sportNaam" required class="form-control" name="sportNaam" value="<?= $sportNaam ?>" autofocus>
+                            <input type="text" id="sportNaam" required class="form-control" name="username" value="<?= $username ?>" autofocus>
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label class="col-md-4 col-form-label text-md-right">Max aantal plaatsen</label>
+                        <label class="col-md-4 col-form-label text-md-right">Wachtwoord</label>
                         <div class="col-md-6">
-                            <input type="number" id="aantalPlaatsen" required class="form-control" name="aantalPlaatsen" value="<?= $aantalPlaatsen ?>" autofocus>
+                            <input type="password" id="sportNaam" class="form-control" name="password" value="<?= $password ?>" autofocus>
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label class="col-md-4 col-form-label text-md-right">Cordinator</label>
+                        <label class="col-md-4 col-form-label text-md-right">Rechten</label>
                         <div class="col-md-6">
-                            <select class="form-select" required name="cordinator">
+                            <select class="form-select" style="width: 100%; height: 100%;" required name="roleID">
                                 <option></option>
                                 <?php
-                                $docenten = array();
-                                $docenten = fgetobject('gebruikers', 'rechten_ID', '10', ' OR rechten_ID = -1');
-                                foreach ($docenten as $docent)
+                                $roles = array();
+                                $roles = fgetobject('roles', 'roleID', '1', ' OR roleID != -1');
+                                foreach ($roles as $role)
                                 {
-                                    $selectedDocent = "";
-                                    if($gebruikersID == $docent['gebruikersID'])
+                                    $selectedrole = "";
+                                    if($roleID == $role['roleID'])
                                     {
-                                        $selectedDocent = "selected";
+                                        $selectedrole = "selected";
                                     }
-                                    echo "<option ".$selectedDocent." value='".$docent['gebruikersID']."'>".$docent['voornaam']." ".$docent['tussenvoegsel']." ".$docent['achternaam']."</option>";
+                                    echo "<option ".$selectedrole." value='".$role['roleID']."'>".$role['name']."</option>";
                                 }
                                 ?>
                             </select>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-md-4 col-form-label text-md-right">Eind datum</label>
+                        <div class="col-md-6">
+                            <input type="date" id="sportNaam" required class="form-control" name="enddate" value="<?= $enddate ?>" autofocus>
                         </div>
                     </div>
                     <div class="col-md-6 offset-md-4">
