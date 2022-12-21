@@ -3,7 +3,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
     {
         if(isset($_POST['username']) && isset($_POST['password']))
         {
-            $var = fgetobject('users', 'username', strtolower($_POST['username']));
+            $var = fgetobject('users', 'username', $_POST['username']);
 
             $selected = $var->fetch(PDO::FETCH_ASSOC);
 
@@ -18,7 +18,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
               die();
             }
 
-            if(password_verify($_POST['password'], $selected['password']) && $selected['username'] == strtolower($_POST['username']))
+            if(password_verify($_POST['password'], $selected['password']) && $selected['username'] == $_POST['username'])
             {
                 $_SESSION["ingelogd"] = true;
                 $_SESSION["userID"] = $selected["userID"];
@@ -34,7 +34,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
             {
                 $_SESSION["alert"]["backgroundcolor"] = "red";
                 $_SESSION["alert"]["color"] = "white";
-                $_SESSION["alert"]["message"] = "oeps, u heeft niet de goede combinatie voor eem gebruikersnaam en wachtwoord";
+                $_SESSION["alert"]["message"] = "oeps, u heeft niet de goede combinatie voor een gebruikersnaam en wachtwoord";
                 header('Location: index.php?path=guest&page=login');
                 die();
             }

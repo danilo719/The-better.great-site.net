@@ -1,9 +1,41 @@
 <?php
-$user = fgetobject("users", "userID", $_SESSION["userID"]);
-$user = $user->fetch(PDO::FETCH_ASSOC);
+if($_SERVER["REQUEST_METHOD"] == "POST")
+{
+    $user = fgetobject("users", "userID", $_SESSION["userID"]);
+    $user = $user->fetch(PDO::FETCH_ASSOC);
+
+    if(password_verify($_POST["old"], $user["password"]))
+    {
+
+        $_SESSION["alert"]["backgroundcolor"] = "red";
+        $_SESSION["alert"]["color"] = "white";
+        $_SESSION["alert"]["message"] = "Oeps probeer het opnieuw, Er is iets fout gegaan!";
+
+        if($_POST["new"] != "")
+        {
+
+            $arrayvalues = array();
+            $arrayvalues["password"] = password_hash($_POST['new'], PASSWORD_DEFAULT);
+
+
+            fupdateobject("users", $arrayvalues, " where userID = ".$user["userID"]);
+
+            $_SESSION["alert"]["backgroundcolor"] = "green";
+            $_SESSION["alert"]["color"] = "white";
+            $_SESSION["alert"]["message"] = "Wachtwoord is succesvol aangepast.";
+        }
+    }
+
+    header('Location: index.php?path=settings&page=account');
+    die();
+}
 
 $user = fgetobject("users", "userID", $_SESSION["userID"]);
 $user = $user->fetch(PDO::FETCH_ASSOC);
+
+$role = fgetobject("roles", "roleID", $user["roleID"]);
+$role = $role->fetch(PDO::FETCH_ASSOC);
+
 ?>
 
 
@@ -15,7 +47,7 @@ $user = $user->fetch(PDO::FETCH_ASSOC);
         <div class="pl-sm-4 pl-2" id="img-section">
             <b>Profile Photo</b>
             <p>(nog niet mogelijk)</p>
-            <button class="btn button border"><b>Upload</b></button>
+            <button disabled class="btn button border"><b>Upload</b></button>
         </div>
     </div>
     <div class="py-2">
@@ -26,18 +58,18 @@ $user = $user->fetch(PDO::FETCH_ASSOC);
             </div>
             <div class="col-md-6 pt-md-0 pt-3">
                 <label for="lastname">Rechten</label>
-                <input type="text" class="bg-light form-control" value="<?= $user[""] ?>" disabled>
+                <input type="text" class="bg-light form-control" value="<?= $role["name"] ?>" disabled>
             </div>
         </div>
         <form action="http://localhost/The-better.great-site.net/index.php?path=settings&page=account" method="POST">
         <div class="row py-2">
             <div class="col-md-6">
                 <label for="email">Oud Wachtwoord</label>
-                <input type="password" class="bg-light form-control" value="">
+                <input type="password" class="bg-light form-control" name="old" value="">
             </div>
             <div class="col-md-6 pt-md-0 pt-3">
                 <label for="phone">Nieuw Wachtwoord</label>
-                <input type="password" class="bg-light form-control" value="">
+                <input type="password" class="bg-light form-control" name="new" value="">
             </div>
         </div>
         <div class="py-3 pb-4 border-bottom">
