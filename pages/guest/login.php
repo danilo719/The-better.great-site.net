@@ -4,8 +4,16 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
         if(isset($_POST['username']) && isset($_POST['password']))
         {
             $var = fgetobject('users', 'username', $_POST['username']);
-
             $selected = $var->fetch(PDO::FETCH_ASSOC);
+
+            $site = fgetobject('site', 'siteID', "1");
+            $selectedsite = $site->fetch(PDO::FETCH_ASSOC);
+
+            if($selectedsite["statusID"] == "2" && $selected["roleID"] != "1")
+            {
+                include 'inc/maintaince.php';
+                die();
+            }
 
             $today = date("Y-m-d");
 

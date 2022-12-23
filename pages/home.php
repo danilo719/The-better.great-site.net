@@ -6,7 +6,7 @@ foreach($menuitems as $menuitem){
   $menuitem_user = fgetobject("userid_menuitemid", "userID", $_SESSION["userID"], " and menuitemID = '".$menuitem["menuitemID"]."'");
   $selected = $menuitem_user->fetch(PDO::FETCH_ASSOC);
 
-  if($selected["userID"] != ""){
+  if($selected["userID"] != "" || $_SESSION["roleID"] == "1"){
 
     ?>
 
